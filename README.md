@@ -3,6 +3,6 @@ configuration files for vim, git, etc.
 
 # how to use
 ```bash
-ln -s ~/dotfiles/vimrc ~/.vimrc
-ln -s ~/dotfiles/gitconfig ~/.gitconfig
+ln -s ~/<your_path_of_this_repo>/vimrc ~/.vimrc
+ln -s ~/<your_path_of_this_repo>/gitconfig ~/.gitconfig
 ```
