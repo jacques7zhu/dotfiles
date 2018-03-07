@@ -15,7 +15,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/syntastic'
-"Plugin 'rhysd/vim-clang-format'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'c.vim'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
@@ -50,18 +49,22 @@ map <leader>n :NERDTree<CR>
 map <Leader> <Plug>(easymotion-prefix)
 nmap <F8> :TagbarToggle<CR>
 "let maplocalleader = ","
+"
 " editors
 syntax enable
 set mouse=a
 set ignorecase
 set smartcase " for case insensitive search
 set foldmethod=syntax
+set foldlevelstart=20
 set spell spelllang=en_us
 set encoding=utf-8
 set number
 set colorcolumn=80
 "set laststatus=2 " display the status line always
 set clipboard=unnamed
+set cino+=(0 " indent ( using =
+:set cinoptions=:0,l1,t0,g0,(0
 
 " tabs and spaces
 filetype plugin indent on
@@ -100,16 +103,10 @@ let g:syntastic_c_include_dirs = [ 'include', 'inc', '../inc', '../../inc']
 let g:syntastic_cpp_compiler = 'gcc'
 "let g:ycm_show_diagnostics_ui = 0
 
-" for clang-format
-"map <C-I> :pyf /usr/local/Cellar/clang-format/2017-11-14/share/clang/clang-format.py<CR>
-"imap <C-I> <ESC>:pyf /usr/local/Cellar/clang-format/2017-11-14/share/clang/clang-format.py<CR>i
-
-" for NERD commenter
-"let mapleader=","
-
 " for NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let NERDTreeIgnore = ['\.o$']
 
 " for airline
 let g:airline_theme = 'solarized'
@@ -171,3 +168,12 @@ imap <silent> <F6> <Plug>StopMarkdownPreview    " for insert mode
 let g:mkdp_auto_open = 1
 let g:mkdp_refresh_slow = 1
 
+" automatically remove trailing space on save
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
