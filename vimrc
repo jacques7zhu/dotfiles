@@ -12,7 +12,8 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'valloric/youcompleteme'
+Plugin 'davidhalter/jedi-vim' " for python autocomplete
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdcommenter'
@@ -23,11 +24,9 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
-Plugin 'lervag/vimtex'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-Plugin 'iamcco/mathjax-support-for-mkdp'
-Plugin 'iamcco/markdown-preview.vim'
+Plugin 'airblade/vim-gitgutter' " show git diff in sign column
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -49,7 +48,7 @@ map <leader>n :NERDTree<CR>
 map <Leader> <Plug>(easymotion-prefix)
 nmap <F8> :TagbarToggle<CR>
 "let maplocalleader = ","
-"
+
 " editors
 syntax enable
 set mouse=a
@@ -61,7 +60,6 @@ set spell spelllang=en_us
 set encoding=utf-8
 set number
 set colorcolumn=80
-"set laststatus=2 " display the status line always
 set clipboard=unnamed
 set cino+=(0 " indent ( using =
 :set cinoptions=:0,l1,t0,g0,(0
@@ -82,8 +80,8 @@ let g:solarized_contrast = "high"
 colorscheme solarized
 
 " for YCM C/C++ autocomplete
-"let g:ycm_collect_identifiers_from_tags_files = 1
-"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " for ack
 let g:ackhighlight = 1
@@ -92,21 +90,17 @@ let g:ackhighlight = 1
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
 let g:syntastic_loc_list_height=5
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_c_check_header = 1
 let g:syntastic_c_include_dirs = [ 'include', 'inc', '../inc', '../../inc']
-"let g:syntastic_c_remove_include_errors = 1
 let g:syntastic_cpp_compiler = 'gcc'
-"let g:ycm_show_diagnostics_ui = 0
 
 " for NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeIgnore = ['\.o$']
+let NERDTreeIgnore = ['\.o$', 'build/$']
 
 " for airline
 let g:airline_theme = 'solarized'
@@ -151,23 +145,6 @@ let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 let g:UltiSnipsSnippetDirectories=["mysnippets", "UltiSnips"]
 
-" for vimtex
-let g:vimtex_view_method = 'skim'
-let g:vimtex_fold_enabled = 1
-"enable automatic completion in vimtex
-if !exists('g:ycm_semantic_triggers')
-let g:ycm_semantic_triggers = {}
-endif
-let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
-
-" for markdown-preview
-nmap <silent> <F5> <Plug>MarkdownPreview        " for normal mode
-imap <silent> <F5> <Plug>MarkdownPreview        " for insert mode
-nmap <silent> <F6> <Plug>StopMarkdownPreview    " for normal mode
-imap <silent> <F6> <Plug>StopMarkdownPreview    " for insert mode
-let g:mkdp_auto_open = 1
-let g:mkdp_refresh_slow = 1
-
 " automatically remove trailing space on save
 fun! <SID>StripTrailingWhitespaces()
     let l = line(".")
@@ -177,3 +154,9 @@ fun! <SID>StripTrailingWhitespaces()
 endfun
 
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
+" switch interpreter for jedi-vim, syntastic and YCM to adapt Python 3
+let g:jedi#force_py_version = 3
+let g:syntastic_python_python_exec = 'python3'
+let g:ycm_server_python_interpreter = 'python3'
+let g:jedi#popup_on_dot = 0
