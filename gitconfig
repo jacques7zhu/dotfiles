@@ -7,8 +7,10 @@
     staged = diff --cached
     coma = commit --amend
     st = status
+    ci = commit
     chp = cherry-pick
-    ck = checkout unstage = reset HEAD --
+    ck = checkout
+    unstage = reset HEAD --
     po = "!sh -c \"git push origin `git symbolic-ref --short HEAD`\""
     pof = "!sh -c \"git push origin `git symbolic-ref --short HEAD` -f\""
     pushnew = push --set-upstream origin
@@ -24,3 +26,6 @@
 
 [status]
 	submoduleSummary = true
+[user]
+  name = YuanjieZhuKolmostar
+	email = yuanjie.zhu@kolmostar.com
