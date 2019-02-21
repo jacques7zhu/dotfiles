@@ -1,10 +1,6 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" Load Vimtex
-let &rtp  = '~/.vim/bundle/vimtex,' . &rtp
-let &rtp .= ',~/.vim/bundle/vimtex/after'
-
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
@@ -12,25 +8,23 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
-Plugin 'valloric/youcompleteme'
 Plugin 'davidhalter/jedi-vim' " for python autocomplete
+Plugin 'w0rp/ale' " for python pep8
 Plugin 'mileszs/ack.vim'
-Plugin 'scrooloose/syntastic'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'c.vim'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'craigemery/vim-autotag'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'majutsushi/tagbar'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
 Plugin 'airblade/vim-gitgutter' " show git diff in sign column
+Plugin 'tpope/vim-abolish' " case preserving replace
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'takac/vim-hardtime' " kick the bad habits
+Plugin 'tpope/vim-surround' " change surroundings
+Plugin 'ctrlpvim/ctrlp.vim' " fuzzy file finder
+Plugin 'tpope/vim-repeat' " optimize .
 
 call vundle#end()            " required
 filetype plugin indent on    " required
 filetype plugin on
+filetype indent on
 
 " securities for custom .vimrc
 set exrc
@@ -40,18 +34,24 @@ set secure
 set path+=**
 
 " keymaps
-"let mapleader = "\<Space>"
 let mapleader = " "
 inoremap jj <ESC>
 vnoremap . :norm.<CR>
 map <leader>n :NERDTree<CR>
 map <Leader> <Plug>(easymotion-prefix)
 nmap <F8> :TagbarToggle<CR>
-"let maplocalleader = ","
+nmap <C-n> :vert ter<CR>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+nnoremap W :w<CR>
+nnoremap X :q<CR>
+nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
+nnoremap <leader>f :ALEFix
 
 " editors
 syntax enable
-set mouse=a
 set ignorecase
 set smartcase " for case insensitive search
 set foldmethod=syntax
@@ -59,91 +59,52 @@ set foldlevelstart=20
 set spell spelllang=en_us
 set encoding=utf-8
 set number
+set relativenumber
 set colorcolumn=80
 set clipboard=unnamed
-set cino+=(0 " indent ( using =
-:set cinoptions=:0,l1,t0,g0,(0
+set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
+set mouse=a
+set laststatus=2 " always turn on status line
+set cursorline
 
 " tabs and spaces
-filetype plugin indent on
-set tabstop=2
-set expandtab
-set shiftwidth=2
 set splitright
-"set hlsearch
+set hlsearch
 set incsearch
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set smartindent
+set autoindent
+set cindent
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
+autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
+"autocmd FileType h setlocal tabstop=2 shiftwidth=2
+autocmd FileType c setlocal tabstop=2 shiftwidth=2
+autocmd FileType python setlocal formatprg=autopep8\ -
+autocmd FileType md setlocal tabstop=3 shiftwidth=3
+autocmd FileType markdown setlocal tabstop=3 shiftwidth=3
+
 
 " set theme
 set background=dark
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 colorscheme solarized
+let python_highlight_all=1
 
-" for YCM C/C++ autocomplete
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/youcompleteme/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+"Fix Shift+Tab
+nmap <S-Tab> <<
+imap <S-Tab> <Esc><<i
+vnoremap <S-Tab> <<
 
 " for ack
 let g:ackhighlight = 1
 
-" for syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_loc_list_height=5
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_c_check_header = 1
-let g:syntastic_c_include_dirs = [ 'include', 'inc', '../inc', '../../inc']
-let g:syntastic_cpp_compiler = 'gcc'
-
 " for NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeIgnore = ['\.o$', 'build/$']
-
-" for airline
-let g:airline_theme = 'solarized'
-
-" for easy-motion
-map <Leader>/ <Plug>(easymotion-sn)
-"omap / <Plug>(easymotion-tn)
-"let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-"nmap s <Plug>(easymotion-overwin-f2)
-" Turn on case insensitive feature
-let g:EasyMotion_smartcase = 1
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-
-" for ultisnips
-" for solving the <tab> collision with ycm
-let g:ycm_key_list_select_completion=["<tab>"]
-let g:ycm_key_list_previous_completion=["<S-tab>"]
-
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
-let g:UltiSnipsExpandTrigger="<nop>"
-let g:ulti_expand_or_jump_res = 0
-function! <SID>ExpandSnippetOrReturn()
-  let snippet = UltiSnips#ExpandSnippetOrJump()
-  if g:ulti_expand_or_jump_res > 0
-    return snippet
-  else
-    return "\<CR>"
-  endif
-endfunction
-inoremap <expr> <CR> pumvisible() ? "<C-R>=<SID>ExpandSnippetOrReturn()<CR>" : "\<CR>"
-
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:UltiSnipsSnippetDirectories=["mysnippets", "UltiSnips"]
+let NERDTreeIgnore = ['\.o$', 'build[[dir]]', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]']
 
 " automatically remove trailing space on save
 fun! <SID>StripTrailingWhitespaces()
@@ -156,7 +117,68 @@ endfun
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
 " switch interpreter for jedi-vim, syntastic and YCM to adapt Python 3
+" for jedi
 let g:jedi#force_py_version = 3
 let g:syntastic_python_python_exec = 'python3'
-let g:ycm_server_python_interpreter = 'python3'
 let g:jedi#popup_on_dot = 0
+let g:jedi#usages_command = "<leader>u"
+
+" for ale linter and fixing
+let g:ale_linters_explicit = 1
+"let g:ale_linters = {
+"\   'python': ['pylint', 'flake8', 'coverage'],
+"\}
+let g:ale_linters = {
+\   'python': ['pylint'],
+\}
+let g:ale_fixers = {
+\   'python': ['autopep8'],
+\}
+
+" for vim-hardtime
+let g:hardtime_default_on = 0
+
+" ignore files
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip " MacOSX/Linux
+
+" ignore files of ctrlp
+let g:ctrlp_custom_ignore = '\v[\/]\(dist|__pycache__|build)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|egg-info)$',
+  \ 'file': '\v\.(exe|so|dll|o|pyc)$',
+  \}
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard'] " ignore files in .gitignore
+
+" Indent Python in the Google way.
+let s:maxoff = 50 " maximum number of lines to look backwards.
+
+function GetGooglePythonIndent(lnum)
+
+  " Indent inside parens.
+  " Align with the open paren unless it is at the end of the line.
+  " E.g.
+  "   open_paren_not_at_EOL(100,
+  "                         (200,
+  "                          300),
+  "                         400)
+  "   open_paren_at_EOL(
+  "       100, 200, 300, 400)
+  call cursor(a:lnum, 1)
+  let [par_line, par_col] = searchpairpos('(\|{\|\[', '', ')\|}\|\]', 'bW',
+        \ "line('.') < " . (a:lnum - s:maxoff) . " ? dummy :"
+        \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
+        \ . " =~ '\\(Comment\\|String\\)$'")
+  if par_line > 0
+    call cursor(par_line, 1)
+    if par_col != col("$") - 1
+      return par_col
+    endif
+  endif
+
+  " Delegate the rest to the original function.
+  return GetPythonIndent(a:lnum)
+
+endfunction
+
+let pyindent_nested_paren="&sw*2"
+let pyindent_open_paren="&sw*2"
