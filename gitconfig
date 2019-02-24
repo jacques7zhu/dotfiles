@@ -32,4 +32,4 @@
   email = yuanjie.zhu@kolmostar.com
 [credential]
   helper = osxkeychain
-  useHttpPath = true
+  useHttpPath = true # associate login credentials specific to the repository path rather than the domain (which is its default behavior)
