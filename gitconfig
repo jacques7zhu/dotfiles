@@ -14,6 +14,7 @@
     po = "!sh -c \"git push origin `git symbolic-ref --short HEAD`\""
     pof = "!sh -c \"git push origin `git symbolic-ref --short HEAD` -f\""
     pushnew = push --set-upstream origin
+    loggr = log --graph --oneline --color --all --decorate
 
 [core]
 	editor = vim -f
@@ -28,4 +29,7 @@
 	submoduleSummary = true
 [user]
   name = YuanjieZhuKolmostar
-	email = yuanjie.zhu@kolmostar.com
+  email = yuanjie.zhu@kolmostar.com
+[credential]
+  helper = osxkeychain
+  useHttpPath = true
