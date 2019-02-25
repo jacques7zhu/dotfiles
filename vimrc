@@ -16,7 +16,6 @@ Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter' " show git diff in sign column
 Plugin 'tpope/vim-abolish' " case preserving replace
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'takac/vim-hardtime' " kick the bad habits
 Plugin 'tpope/vim-surround' " change surroundings
 Plugin 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plugin 'tpope/vim-repeat' " optimize .
@@ -48,7 +47,7 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap W :w<CR>
 nnoremap X :q<CR>
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
-nnoremap <leader>f :ALEFix
+nnoremap <leader>f :ALEFix<CR>
 
 " editors
 syntax enable
@@ -79,7 +78,6 @@ set autoindent
 set cindent
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
-"autocmd FileType h setlocal tabstop=2 shiftwidth=2
 autocmd FileType c setlocal tabstop=2 shiftwidth=2
 autocmd FileType python setlocal formatprg=autopep8\ -
 autocmd FileType md setlocal tabstop=3 shiftwidth=3
@@ -105,6 +103,8 @@ let g:ackhighlight = 1
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let NERDTreeIgnore = ['\.o$', 'build[[dir]]', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]']
+let NERDTreeShowLineNumbers=1
+autocmd FileType nerdtree setlocal norelativenumber
 
 " automatically remove trailing space on save
 fun! <SID>StripTrailingWhitespaces()
@@ -125,18 +125,12 @@ let g:jedi#usages_command = "<leader>u"
 
 " for ale linter and fixing
 let g:ale_linters_explicit = 1
-"let g:ale_linters = {
-"\   'python': ['pylint', 'flake8', 'coverage'],
-"\}
 let g:ale_linters = {
 \   'python': ['pylint'],
 \}
 let g:ale_fixers = {
 \   'python': ['autopep8'],
 \}
-
-" for vim-hardtime
-let g:hardtime_default_on = 0
 
 " ignore files
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip " MacOSX/Linux
