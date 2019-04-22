@@ -44,10 +44,13 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-nnoremap W :w<CR>
-nnoremap X :q<CR>
+"nnoremap W :w<CR>
+nnoremap <C-S> :w<CR>
+"nnoremap X :q<CR>
+nnoremap X :bw<CR> " close and remove current buffer
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
 nnoremap <leader>f :ALEFix<CR>
+map Q <ESC>
 
 " editors
 syntax enable
@@ -65,6 +68,8 @@ set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
 set mouse=a
 set laststatus=2 " always turn on status line
 set cursorline
+set complete=.,w,b,i
+set noswapfile
 
 " tabs and spaces
 set splitright
@@ -119,7 +124,7 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 " switch interpreter for jedi-vim, syntastic and YCM to adapt Python 3
 " for jedi
 let g:jedi#force_py_version = 3
-let g:syntastic_python_python_exec = 'python3'
+"let g:syntastic_python_python_exec = 'python3'
 let g:jedi#popup_on_dot = 0
 let g:jedi#usages_command = "<leader>u"
 
@@ -133,12 +138,12 @@ let g:ale_fixers = {
 \}
 
 " ignore files
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip " MacOSX/Linux
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,**/venv/**,*.pyc,*.pyo,__pycache__
 
 " ignore files of ctrlp
-let g:ctrlp_custom_ignore = '\v[\/]\(dist|__pycache__|build)$'
+let g:ctrlp_custom_ignore = '\v[\/]\(dist|__pycache__|build|venv)$'
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|egg-info)$',
+  \ 'dir':  '\v[\/]\.(git|egg-info)$\venv$',
   \ 'file': '\v\.(exe|so|dll|o|pyc)$',
   \}
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard'] " ignore files in .gitignore
