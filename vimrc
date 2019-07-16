@@ -19,6 +19,8 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'tpope/vim-surround' " change surroundings
 Plugin 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plugin 'tpope/vim-repeat' " optimize .
+Plugin 'craigemery/vim-autotag' " auto update ctags
+Plugin 'zxqfl/tabnine-vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -44,13 +46,14 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-"nnoremap W :w<CR>
+nnoremap Q :w<CR>
 nnoremap <C-S> :w<CR>
-"nnoremap X :q<CR>
 nnoremap X :bw<CR> " close and remove current buffer
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
 nnoremap <leader>f :ALEFix<CR>
 map Q <ESC>
+inoremap <C-l> <ESC>la
+:nmap cp :let @+ = expand("%")<cr>
 
 " editors
 syntax enable
@@ -65,9 +68,8 @@ set relativenumber
 set colorcolumn=80
 set clipboard=unnamed
 set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
-set mouse=a
+set mouse=n
 set laststatus=2 " always turn on status line
-set cursorline
 set complete=.,w,b,i
 set noswapfile
 
@@ -81,6 +83,7 @@ set shiftwidth=4
 set smartindent
 set autoindent
 set cindent
+
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
 autocmd FileType c setlocal tabstop=2 shiftwidth=2
@@ -95,6 +98,10 @@ let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 colorscheme solarized
 let python_highlight_all=1
+hi StatusLine ctermfg=green ctermbg=2 cterm=None " change current window status line color
+set cursorline
+hi CursorLine ctermbg=LightBlue
+" change current line color, should be put behind colorscheme
 
 "Fix Shift+Tab
 nmap <S-Tab> <<
@@ -107,7 +114,7 @@ let g:ackhighlight = 1
 " for NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeIgnore = ['\.o$', 'build[[dir]]', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]']
+let NERDTreeIgnore = ['\.o$', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]']
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal norelativenumber
 
@@ -124,8 +131,7 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 " switch interpreter for jedi-vim, syntastic and YCM to adapt Python 3
 " for jedi
 let g:jedi#force_py_version = 3
-"let g:syntastic_python_python_exec = 'python3'
-let g:jedi#popup_on_dot = 0
+"let g:jedi#popup_on_dot = 0
 let g:jedi#usages_command = "<leader>u"
 
 " for ale linter and fixing
