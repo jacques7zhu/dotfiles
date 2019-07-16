@@ -19,12 +19,6 @@
 [core]
 	editor = vim -f
 
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-
 [status]
 	submoduleSummary = true
 [user]
@@ -33,3 +27,8 @@
 [credential]
   helper = osxkeychain
   useHttpPath = true # associate login credentials specific to the repository path rather than the domain (which is its default behavior)
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
