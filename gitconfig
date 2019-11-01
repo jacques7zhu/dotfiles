@@ -4,6 +4,7 @@
     resethard = reset HEAD --hard
     last = log -1 HEAD
     di = diff
+    div = difftool
     staged = diff --cached
     coma = commit --amend
     st = status
@@ -15,6 +16,8 @@
     pof = "!sh -c \"git push origin `git symbolic-ref --short HEAD` -f\""
     pushnew = push --set-upstream origin
     loggr = log --graph --oneline --color --all --decorate
+    pl = pull
+    fh = fetch
 
 [core]
 	editor = vim -f
@@ -32,3 +35,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[diff]
+  tool = vimdiff

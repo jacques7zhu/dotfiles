@@ -4,6 +4,8 @@ set -x AWS_DEFAULT_PROFILE default
 set -x SCONS_LIB_DIR /usr/local/lib/python3.7/site-packages/scons-3.0.1
 set -gx LDFLAGS "-L/usr/local/opt/zlib/lib"
 set -gx CPPFLAGS "-I/usr/local/opt/zlib/include"
+set -x http_proxy http://127.0.0.1:1087
+set -x https_proxy http://127.0.0.1:1087
 
 function cwd
     pwd | pbcopy

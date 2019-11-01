@@ -21,6 +21,7 @@ Plugin 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plugin 'tpope/vim-repeat' " optimize .
 Plugin 'craigemery/vim-autotag' " auto update ctags
 Plugin 'zxqfl/tabnine-vim'
+Plugin 'drmikehenry/vim-headerguard' "add header guard
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -38,7 +39,7 @@ set path+=**
 let mapleader = " "
 inoremap jj <ESC>
 vnoremap . :norm.<CR>
-map <leader>n :NERDTree<CR>
+map <leader>n :NERDTreeToggle<CR>
 map <Leader> <Plug>(easymotion-prefix)
 nmap <F8> :TagbarToggle<CR>
 nmap <C-n> :vert ter<CR>
@@ -53,7 +54,9 @@ nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
 nnoremap <leader>f :ALEFix<CR>
 map Q <ESC>
 inoremap <C-l> <ESC>la
-:nmap cp :let @+ = expand("%")<cr>
+nmap cp :let @+ = expand("%")<cr> " copy relative path of current file"
+nmap pb cw<C-r>0<ESC> " paste word from current cursor with content in register 0
+:command Cwd cd %:p:h " map Cwd to change directory to curret file
 
 " editors
 syntax enable
@@ -84,9 +87,12 @@ set smartindent
 set autoindent
 set cindent
 
+" diff
+set diffopt=vertical
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
 autocmd FileType c setlocal tabstop=2 shiftwidth=2
+autocmd FileType h setlocal tabstop=2 shiftwidth=2
 autocmd FileType python setlocal formatprg=autopep8\ -
 autocmd FileType md setlocal tabstop=3 shiftwidth=3
 autocmd FileType markdown setlocal tabstop=3 shiftwidth=3
@@ -116,7 +122,7 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let NERDTreeIgnore = ['\.o$', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]']
 let NERDTreeShowLineNumbers=1
-autocmd FileType nerdtree setlocal norelativenumber
+autocmd FileType nerdtree setlocal relativenumber
 
 " automatically remove trailing space on save
 fun! <SID>StripTrailingWhitespaces()
@@ -133,6 +139,8 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 let g:jedi#force_py_version = 3
 "let g:jedi#popup_on_dot = 0
 let g:jedi#usages_command = "<leader>u"
+let g:jedi#show_call_signatures = "1"
+
 
 " for ale linter and fixing
 let g:ale_linters_explicit = 1
@@ -185,5 +193,11 @@ function GetGooglePythonIndent(lnum)
 
 endfunction
 
-let pyindent_nested_paren="&sw*2"
-let pyindent_open_paren="&sw*2"
+let g:pyindent_nested_paren='shiftwidth() * 1'
+let g:pyindent_open_paren='shiftwidth() * 1'
+let g:pyindent_continue = 'shiftwidth() * 1'
+
+" Custom header guard
+function! g:HeaderguardName()
+  return "INC_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g')) . "_"
+endfunction
