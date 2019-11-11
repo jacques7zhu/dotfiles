@@ -1,5 +1,4 @@
 set nocompatible              " be iMproved, required
-filetype off                  " required
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -8,7 +7,6 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/nerdtree'
-Plugin 'davidhalter/jedi-vim' " for python autocomplete
 Plugin 'w0rp/ale' " for python pep8
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdcommenter'
@@ -19,14 +17,11 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'tpope/vim-surround' " change surroundings
 Plugin 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plugin 'tpope/vim-repeat' " optimize .
-Plugin 'craigemery/vim-autotag' " auto update ctags
 Plugin 'zxqfl/tabnine-vim'
 Plugin 'drmikehenry/vim-headerguard' "add header guard
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-filetype plugin on
-filetype indent on
 
 " securities for custom .vimrc
 set exrc
@@ -38,24 +33,21 @@ set path+=**
 " keymaps
 let mapleader = " "
 inoremap jj <ESC>
-vnoremap . :norm.<CR>
 map <leader>n :NERDTreeToggle<CR>
-map <Leader> <Plug>(easymotion-prefix)
-nmap <F8> :TagbarToggle<CR>
 nmap <C-n> :vert ter<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+nnoremap Y y$
 nnoremap Q :w<CR>
 nnoremap <C-S> :w<CR>
 nnoremap X :bw<CR> " close and remove current buffer
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
 nnoremap <leader>f :ALEFix<CR>
-map Q <ESC>
 inoremap <C-l> <ESC>la
 nmap cp :let @+ = expand("%")<cr> " copy relative path of current file"
-nmap pb cw<C-r>0<ESC> " paste word from current cursor with content in register 0
+nmap <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
 :command Cwd cd %:p:h " map Cwd to change directory to curret file
 
 " editors
@@ -89,24 +81,23 @@ set cindent
 
 " diff
 set diffopt=vertical
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
 autocmd FileType c setlocal tabstop=2 shiftwidth=2
 autocmd FileType h setlocal tabstop=2 shiftwidth=2
-autocmd FileType python setlocal formatprg=autopep8\ -
 autocmd FileType md setlocal tabstop=3 shiftwidth=3
-autocmd FileType markdown setlocal tabstop=3 shiftwidth=3
+autocmd FileType markdown setlocal tabstop=2 shiftwidth=2
+au FileType python set cindent
 
 
 " set theme
 set background=dark
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
-colorscheme solarized
+let g:solarized_termcolors=16
 let python_highlight_all=1
-hi StatusLine ctermfg=green ctermbg=2 cterm=None " change current window status line color
+colorscheme solarized
 set cursorline
-hi CursorLine ctermbg=LightBlue
+hi CursorLine gui=underline cterm=underline term=underline
 " change current line color, should be put behind colorscheme
 
 "Fix Shift+Tab
@@ -133,14 +124,6 @@ fun! <SID>StripTrailingWhitespaces()
 endfun
 
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
-
-" switch interpreter for jedi-vim, syntastic and YCM to adapt Python 3
-" for jedi
-let g:jedi#force_py_version = 3
-"let g:jedi#popup_on_dot = 0
-let g:jedi#usages_command = "<leader>u"
-let g:jedi#show_call_signatures = "1"
-
 
 " for ale linter and fixing
 let g:ale_linters_explicit = 1
@@ -201,3 +184,5 @@ let g:pyindent_continue = 'shiftwidth() * 1'
 function! g:HeaderguardName()
   return "INC_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g')) . "_"
 endfunction
+
+autocmd VimEnter * if !argc() | NERDTree | endif

@@ -40,6 +40,16 @@ function fish_user_key_bindings
     end
 end
 
+function vim
+    mvim -v $argv
+end
+
+# https://github.com/fish-shell/fish-shell/issues/583
+function __check_pwd --on-variable PWD --description 'ls when cd'
+  status --is-command-substitution; and return
+  ls
+end
+
 status --is-interactive; and source (pyenv init -|psub)
 
 set -g fish_key_bindings fish_vi_key_bindings
