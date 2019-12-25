@@ -1,26 +1,33 @@
 set nocompatible              " be iMproved, required
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" auto install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'scrooloose/nerdtree'
-Plugin 'w0rp/ale' " for python pep8
-Plugin 'mileszs/ack.vim'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'airblade/vim-gitgutter' " show git diff in sign column
-Plugin 'tpope/vim-abolish' " case preserving replace
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'tpope/vim-surround' " change surroundings
-Plugin 'ctrlpvim/ctrlp.vim' " fuzzy file finder
-Plugin 'tpope/vim-repeat' " optimize .
-Plugin 'zxqfl/tabnine-vim'
-Plugin 'drmikehenry/vim-headerguard' "add header guard
+call plug#begin('~/.vim/plugged')
 
-call vundle#end()            " required
+Plug 'VundleVim/Vundle.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'altercation/vim-colors-solarized'
+Plug 'scrooloose/nerdtree'
+Plug 'davidhalter/jedi-vim'
+Plug 'w0rp/ale' " for python pep8
+Plug 'mileszs/ack.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'airblade/vim-gitgutter' " show git diff in sign column
+Plug 'tpope/vim-abolish' " case preserving replace
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-surround' " change surroundings
+Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
+Plug 'tpope/vim-repeat' " optimize .
+Plug 'drmikehenry/vim-headerguard' "add header guard
+
+call plug#end()
+
 filetype plugin indent on    " required
 
 " securities for custom .vimrc
@@ -81,12 +88,13 @@ set cindent
 
 " diff
 set diffopt=vertical
+au FileType python set cindent
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
 autocmd FileType c setlocal tabstop=2 shiftwidth=2
 autocmd FileType h setlocal tabstop=2 shiftwidth=2
 autocmd FileType md setlocal tabstop=3 shiftwidth=3
 autocmd FileType markdown setlocal tabstop=2 shiftwidth=2
-au FileType python set cindent
 
 
 " set theme
@@ -111,7 +119,7 @@ let g:ackhighlight = 1
 " for NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeIgnore = ['\.o$', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]']
+let NERDTreeIgnore = ['\.o$', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]', '\.su$']
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal relativenumber
 
@@ -124,6 +132,12 @@ fun! <SID>StripTrailingWhitespaces()
 endfun
 
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
+" switch interpreter for jedi-vim, syntastic and YCM to adapt Python 3
+" for jedi
+let g:jedi#force_py_version = 3
+let g:jedi#usages_command = "<leader>u"
+let g:jedi#show_call_signatures = "1"
 
 " for ale linter and fixing
 let g:ale_linters_explicit = 1
