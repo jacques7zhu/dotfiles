@@ -13,8 +13,6 @@ Plug 'VundleVim/Vundle.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'altercation/vim-colors-solarized'
 Plug 'scrooloose/nerdtree'
-Plug 'davidhalter/jedi-vim'
-Plug 'w0rp/ale' " for python pep8
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -25,6 +23,8 @@ Plug 'tpope/vim-surround' " change surroundings
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'tpope/vim-repeat' " optimize .
 Plug 'drmikehenry/vim-headerguard' "add header guard
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -41,7 +41,6 @@ set path+=**
 let mapleader = " "
 inoremap jj <ESC>
 map <leader>n :NERDTreeToggle<CR>
-nmap <C-n> :vert ter<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -49,13 +48,21 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap Y y$
 nnoremap Q :w<CR>
 nnoremap <C-S> :w<CR>
-nnoremap X :bw<CR> " close and remove current buffer
+nnoremap X :x<CR> " save and close
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
 nnoremap <leader>f :ALEFix<CR>
 inoremap <C-l> <ESC>la
 nmap cp :let @+ = expand("%")<cr> " copy relative path of current file"
 nmap <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
 :command Cwd cd %:p:h " map Cwd to change directory to curret file
+nnoremap <silent> vv <C-w>v " split vertically
+nnoremap <leader>x :%!xxd<cr> " display in hex format
+" Map alt-j, only workds in mac terminal, see https://vi.stackexchange.com/questions/2350/how-to-map-alt-key
+execute "set <M-j>=∆"
+nnoremap <M-j> 5j
+" Map alt-k
+execute "set <M-k>=˚"
+nnoremap <M-k> 5k
 
 " editors
 syntax enable
@@ -71,6 +78,7 @@ set colorcolumn=80
 set clipboard=unnamed
 set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
 set mouse=n
+"set mouse=a
 set laststatus=2 " always turn on status line
 set complete=.,w,b,i
 set noswapfile
@@ -91,11 +99,9 @@ set diffopt=vertical
 au FileType python set cindent
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
-autocmd FileType c setlocal tabstop=2 shiftwidth=2
-autocmd FileType h setlocal tabstop=2 shiftwidth=2
-autocmd FileType md setlocal tabstop=3 shiftwidth=3
-autocmd FileType markdown setlocal tabstop=2 shiftwidth=2
-
+autocmd FileType c setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType cpp setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType markdown setlocal tabstop=2 shiftwidth=2 expandtab
 
 " set theme
 set background=dark
@@ -200,3 +206,6 @@ function! g:HeaderguardName()
 endfunction
 
 autocmd VimEnter * if !argc() | NERDTree | endif
+
+" For coc.nvim
+"source ~/.vim/coc_config.vimrc
