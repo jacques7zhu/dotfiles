@@ -25,6 +25,9 @@ Plug 'tpope/vim-repeat' " optimize .
 Plug 'drmikehenry/vim-headerguard' "add header guard
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'vimwiki/vimwiki'
+Plug 'itchyny/lightline.vim'
+Plug 'justinmk/vim-sneak'
 
 call plug#end()
 
@@ -41,6 +44,7 @@ set path+=**
 let mapleader = " "
 inoremap jj <ESC>
 map <leader>n :NERDTreeToggle<CR>
+map <leader>N :NERDTree<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -54,15 +58,29 @@ nnoremap <leader>f :ALEFix<CR>
 inoremap <C-l> <ESC>la
 nmap cp :let @+ = expand("%")<cr> " copy relative path of current file"
 nmap <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
-:command Cwd cd %:p:h " map Cwd to change directory to curret file
+":command Cwd cd %:p:h " map Cwd to change directory to curret file
 nnoremap <silent> vv <C-w>v " split vertically
 nnoremap <leader>x :%!xxd<cr> " display in hex format
 " Map alt-j, only workds in mac terminal, see https://vi.stackexchange.com/questions/2350/how-to-map-alt-key
-execute "set <M-j>=∆"
-nnoremap <M-j> 5j
+" Should use Meta mode for alt key in iTerm2
+"execute "set <A-j>=^[j"
+nnoremap <A-j> 5j
 " Map alt-k
-execute "set <M-k>=˚"
-nnoremap <M-k> 5k
+"execute "set <A-k>=^[k"
+nnoremap <A-k> 5k
+nnoremap <C-n> :vert term<cr>
+nnoremap <Leader>e :e ~/.vimrc<cr>
+nnoremap <Leader>r :so $MYVIMRC<cr> " reload vimrc of neovim
+" move selected
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" For gitgutter
+"nmap <leader>j <Plug>(GitGutterNextHunk)
+"nmap <leader>k <Plug>(GitGutterPrevHunk)
+"nmap <leader>hs <Plug>(GitGutterStageHunk)
+"nmap <leader>hu <Plug>(GitGutterUndoHunk)
+"nmap <leader>hp <Plug>(GitGutterPreviewHunk)
 
 " editors
 syntax enable
@@ -109,10 +127,29 @@ let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 let g:solarized_termcolors=16
 let python_highlight_all=1
+" For lightline
+set noshowmode
+
+" must be put befor the colorscheme
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'absolutepath', 'modified'] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
+      \ },
+      \ }
 colorscheme solarized
 set cursorline
-hi CursorLine gui=underline cterm=underline term=underline
 " change current line color, should be put behind colorscheme
+hi CursorLine gui=underline cterm=underline term=underline
+" Change line number color
+hi CursorLineNr ctermfg=DarkCyan ctermbg=Black
+hi LineNr ctermfg=DarkGray ctermbg=Black
+
 
 "Fix Shift+Tab
 nmap <S-Tab> <<
@@ -208,4 +245,17 @@ endfunction
 autocmd VimEnter * if !argc() | NERDTree | endif
 
 " For coc.nvim
-"source ~/.vim/coc_config.vimrc
+source ~/.vim/coc_config.vimrc
+
+" For vimwiki
+" Use markdown syntax
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
+" For neovim
+if !has('nvim')
+    set ttymouse=xterm2
+endif
+
+" reduce vim delay
+set updatetime=100
