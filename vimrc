@@ -28,6 +28,12 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vimwiki/vimwiki'
 Plug 'itchyny/lightline.vim'
 Plug 'justinmk/vim-sneak'
+" The bang version will try to download the prebuilt binary if cargo does not exist.
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'pangloss/vim-javascript'
+Plug 'mattn/emmet-vim'
+Plug 'ThePrimeagen/vim-be-good'
+Plug 'w0rp/ale'
 
 call plug#end()
 
@@ -64,16 +70,22 @@ nnoremap <leader>x :%!xxd<cr> " display in hex format
 " Map alt-j, only workds in mac terminal, see https://vi.stackexchange.com/questions/2350/how-to-map-alt-key
 " Should use Meta mode for alt key in iTerm2
 "execute "set <A-j>=^[j"
-nnoremap <A-j> 5j
+map <A-j> 5j
 " Map alt-k
 "execute "set <A-k>=^[k"
-nnoremap <A-k> 5k
+map <A-k> 5k
 nnoremap <C-n> :vert term<cr>
 nnoremap <Leader>e :e ~/.vimrc<cr>
 nnoremap <Leader>r :so $MYVIMRC<cr> " reload vimrc of neovim
 " move selected
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
+nnoremap ,g  :Clap grep2<cr>
+nnoremap ,f :Clap files<cr>
+nnoremap ,G :Clap git_diff_files<cr>
+nnoremap ,m :Clap marks<cr>
+nnoremap ,j :Clap jumps<cr>
+nnoremap ,b :Clap buffers<cr>
 
 " For gitgutter
 "nmap <leader>j <Plug>(GitGutterNextHunk)
@@ -81,6 +93,16 @@ vnoremap K :m '<-2<CR>gv=gv
 "nmap <leader>hs <Plug>(GitGutterStageHunk)
 "nmap <leader>hu <Plug>(GitGutterUndoHunk)
 "nmap <leader>hp <Plug>(GitGutterPreviewHunk)
+"
+" For vim-sneak
+" 2-character Sneak (default)
+"nmap f <Plug>Sneak_s
+"nmap F <Plug>Sneak_S
+"" visual-mode
+"xmap f <Plug>Sneak_s
+"xmap F <Plug>Sneak_S
+"map ; <Plug>Sneak_;
+"map , <Plug>Sneak_,
 
 " editors
 syntax enable
@@ -120,6 +142,7 @@ autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
 autocmd FileType c setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd FileType cpp setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd FileType markdown setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab
 
 " set theme
 set background=dark
@@ -186,9 +209,11 @@ let g:jedi#show_call_signatures = "1"
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
 \   'python': ['pylint'],
+\   'javascript': ['eslint'],
 \}
 let g:ale_fixers = {
 \   'python': ['autopep8'],
+\   'javascript': ['eslint'],
 \}
 
 " ignore files
@@ -242,7 +267,7 @@ function! g:HeaderguardName()
   return "INC_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g')) . "_"
 endfunction
 
-autocmd VimEnter * if !argc() | NERDTree | endif
+"autocmd VimEnter * if !argc() | NERDTree | endif
 
 " For coc.nvim
 source ~/.vim/coc_config.vimrc
