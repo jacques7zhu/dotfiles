@@ -18,14 +18,14 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter' " show git diff in sign column
 Plug 'tpope/vim-abolish' " case preserving replace
-Plug 'jiangmiao/auto-pairs'
+"Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround' " change surroundings
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'tpope/vim-repeat' " optimize .
 Plug 'drmikehenry/vim-headerguard' "add header guard
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'vimwiki/vimwiki'
+"Plug 'vimwiki/vimwiki'
 Plug 'itchyny/lightline.vim'
 Plug 'justinmk/vim-sneak'
 " The bang version will try to download the prebuilt binary if cargo does not exist.
@@ -49,24 +49,24 @@ set path+=**
 " keymaps
 let mapleader = " "
 inoremap jj <ESC>
-map <leader>n :NERDTreeToggle<CR>
-map <leader>N :NERDTree<CR>
+map <silent> <leader>n :NERDTreeToggle<CR>
+map <silent> <leader>N :NERDTree<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 nnoremap Y y$
-nnoremap Q :w<CR>
 nnoremap <C-S> :w<CR>
 nnoremap X :x<CR> " save and close
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
 nnoremap <leader>f :ALEFix<CR>
 inoremap <C-l> <ESC>la
-nmap cp :let @+ = expand("%")<cr> " copy relative path of current file"
-nmap <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
+nmap <silent> cp :let @+ = expand("%")<cr> " copy relative path of current file"
+nmap <silent> <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
 ":command Cwd cd %:p:h " map Cwd to change directory to curret file
 nnoremap <silent> vv <C-w>v " split vertically
 nnoremap <leader>x :%!xxd<cr> " display in hex format
+nnoremap * *N " stay in current word when typing *
 " Map alt-j, only workds in mac terminal, see https://vi.stackexchange.com/questions/2350/how-to-map-alt-key
 " Should use Meta mode for alt key in iTerm2
 "execute "set <A-j>=^[j"
@@ -80,12 +80,12 @@ nnoremap <Leader>r :so $MYVIMRC<cr> " reload vimrc of neovim
 " move selected
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
-nnoremap ,g  :Clap grep2<cr>
-nnoremap ,f :Clap files<cr>
-nnoremap ,G :Clap git_diff_files<cr>
-nnoremap ,m :Clap marks<cr>
-nnoremap ,j :Clap jumps<cr>
-nnoremap ,b :Clap buffers<cr>
+nnoremap <silent> <leader>g  :Clap grep2<cr>
+nnoremap <silent> <leader>f :Clap files<cr>
+nnoremap <silent> <leader>G :Clap git_diff_files<cr>
+nnoremap <silent> <leader>m :Clap marks<cr>
+nnoremap <silent> <leader>j :Clap jumps<cr>
+nnoremap <silent> <leader>b :Clap buffers<cr>
 
 " For gitgutter
 "nmap <leader>j <Plug>(GitGutterNextHunk)
@@ -172,6 +172,7 @@ hi CursorLine gui=underline cterm=underline term=underline
 " Change line number color
 hi CursorLineNr ctermfg=DarkCyan ctermbg=Black
 hi LineNr ctermfg=DarkGray ctermbg=Black
+hi SignColumn ctermbg=DarkGrey ctermbg=Black
 
 
 "Fix Shift+Tab
@@ -274,8 +275,8 @@ source ~/.vim/coc_config.vimrc
 
 " For vimwiki
 " Use markdown syntax
-let g:vimwiki_list = [{'path': '~/vimwiki/',
-                      \ 'syntax': 'markdown', 'ext': '.md'}]
+"let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      "\ 'syntax': 'markdown', 'ext': '.md'}]
 
 " For neovim
 if !has('nvim')
