@@ -66,7 +66,9 @@ nmap <silent> <leader>p cw<C-r>0<ESC> " paste word from current cursor with cont
 ":command Cwd cd %:p:h " map Cwd to change directory to curret file
 nnoremap <silent> vv <C-w>v " split vertically
 nnoremap <leader>x :%!xxd<cr> " display in hex format
-nnoremap * *N " stay in current word when typing *
+"nnoremap * *N " stay in current word when typing *
+"https://superuser.com/questions/299646/vim-make-star-command-stay-on-current-word
+"nmap <silent> * :let @/='\<'.expand('<cword>').'\>'<CR>
 " Map alt-j, only workds in mac terminal, see https://vi.stackexchange.com/questions/2350/how-to-map-alt-key
 " Should use Meta mode for alt key in iTerm2
 "execute "set <A-j>=^[j"
@@ -154,10 +156,10 @@ let python_highlight_all=1
 set noshowmode
 
 " must be put befor the colorscheme
+" [ 'mode', 'paste' ],
 let g:lightline = {
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'absolutepath', 'modified'] ],
+      \   'left': [ ['gitbranch'], ['relativepath', 'modified'] ],
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ] ]
       \ },
@@ -186,7 +188,7 @@ let g:ackhighlight = 1
 " for NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-let NERDTreeIgnore = ['\.o$', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]', '\.su$']
+let NERDTreeIgnore = ['bazel-*[[dir]]', '\.o$', 'venv[[dir]]','dist[[dir]]', '\.egg-info$[[dir]]', '__pycache__[[dir]]', '\.su$']
 let NERDTreeShowLineNumbers=1
 autocmd FileType nerdtree setlocal relativenumber
 
