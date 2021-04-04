@@ -1,0 +1,11 @@
+{
+    "credStore":"desktop",
+    "credsStore":"desktop",
+    "stackOrchestrator":"swarm",
+    "proxies": {
+        "default": {
+            "httpProxy": "http://host.docker.internal:10809",
+            "httpsProxy": "http://host.docker.internal:10809"
+        }
+    }
+}
