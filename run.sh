@@ -11,3 +11,5 @@ ln -sf $PWD/ctags ~/.ctags
 ln -sf $PWD/tmux.conf ~/.tmux.conf
 ln -sf $PWD/tmux ~/.tmux
 ln -sf $PWD/docker_config.json ~/.docker/config.json
+
+nvim -es -u ~/.config/nvim/init.vim -i NONE -c "PlugInstall" -c "qa"

@@ -284,7 +284,7 @@ endfunction
 "autocmd VimEnter * if !argc() | NERDTree | endif
 
 " For coc.nvim
-source ~/.vim/coc_config.vimrc
+" source ~/.vim/coc_config.vimrc
 
 " For vimwiki
 " Use markdown syntax
