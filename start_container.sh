@@ -1,0 +1,1 @@
+docker run --rm -it -d --name dev dev
