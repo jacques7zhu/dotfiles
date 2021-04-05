@@ -35,6 +35,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'mattn/emmet-vim'
 Plug 'ThePrimeagen/vim-be-good'
 Plug 'w0rp/ale'
+Plug 'elmcast/elm-vim'
 
 call plug#end()
 
@@ -64,16 +65,16 @@ nnoremap <leader>f :ALEFix<CR>
 inoremap <C-l> <ESC>la
 nmap <silent> cp :let @+ = expand("%")<cr> " copy relative path of current file"
 nmap <silent> <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
-":command Cwd cd %:p:h " map Cwd to change directory to curret file
 nnoremap <silent> vv <C-w>v " split vertically
 nnoremap <silent> -- <C-w>s " split vertically
 nnoremap <leader>x :%!xxd<cr> " display in hex format
-tnoremap <Esc> <C-\><C-n> " map key to normal mode in vim terminal
-tnoremap <C-d> <C-\><C-n>:bd!<CR>
+"use :bd! to clear buffer
+
 :command! E e %:h
 "nnoremap * *N " stay in current word when typing *
 "https://superuser.com/questions/299646/vim-make-star-command-stay-on-current-word
 "nmap <silent> * :let @/='\<'.expand('<cword>').'\>'<CR>
+"
 " Map alt-j, only workds in mac terminal, see https://vi.stackexchange.com/questions/2350/how-to-map-alt-key
 " Should use Meta mode for alt key in iTerm2
 "execute "set <A-j>=^[j"
@@ -85,7 +86,6 @@ map <A-k> 5k
 
 nnoremap <F7> 5j
 nnoremap <F8> 5k
-nnoremap <C-n> :vert term<cr>
 nnoremap <Leader>e :e ~/.vimrc<cr>
 nnoremap <Leader>r :so $MYVIMRC<cr> " reload vimrc of neovim
 " move selected
@@ -98,6 +98,19 @@ nnoremap <silent> <leader>m :Clap marks<cr>
 nnoremap <silent> <leader>j :Clap jumps<cr>
 nnoremap <silent> <leader>b :Clap buffers<cr>
 "nnoremap <silent> <leader>h :Clap history<cr>
+nnoremap <C-n> :call OpenTerm()<cr>i
+nnoremap <Leader>t :call OpenTerm()<cr>i
+tnoremap <leader><Esc> <C-\><C-n> " map key to normal mode in vim terminal
+tnoremap <C-d> <C-\><C-n>:q<cr>" map key to normal mode in vim terminal
+
+function OpenTerm()
+    let term_buff = bufname("^term://*$")
+    if bufexists(term_buff)
+        execute 'edit' term_buff
+    else
+        vert term
+    endif
+endfunction
 
 " For gitgutter
 "nmap <leader>j <Plug>(GitGutterNextHunk)
@@ -174,11 +187,14 @@ let g:lightline = {
       \   'right': [ [ 'lineinfo' ],
       \              [ 'percent' ] ]
       \ },
+      \ 'inactive': {
+      \   'left': [ ['relativepath', 'modified'] ],
+      \ },
       \ 'component_function': {
       \   'gitbranch': 'FugitiveHead',
       \ },
       \ }
-" colorscheme solarized
+colorscheme solarized
 set cursorline
 " change current line color, should be put behind colorscheme
 hi CursorLine gui=underline cterm=underline term=underline
@@ -286,11 +302,6 @@ endfunction
 " For coc.nvim
 " source ~/.vim/coc_config.vimrc
 
-" For vimwiki
-" Use markdown syntax
-"let g:vimwiki_list = [{'path': '~/vimwiki/',
-                      "\ 'syntax': 'markdown', 'ext': '.md'}]
-
 " For neovim
 if !has('nvim')
     set ttymouse=xterm2
@@ -298,3 +309,7 @@ endif
 
 " reduce vim delay
 set updatetime=100
+
+" for elm
+let maplocalleader = " "
+
