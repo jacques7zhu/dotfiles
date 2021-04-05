@@ -12,6 +12,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'VundleVim/Vundle.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'altercation/vim-colors-solarized'
+Plug 'morhetz/gruvbox'
 Plug 'scrooloose/nerdtree'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
@@ -47,7 +48,7 @@ set secure
 set path+=**
 
 " keymaps
-let mapleader = " "
+let mapleader = ","
 inoremap jj <ESC>
 map <silent> <leader>n :NERDTreeToggle<CR>
 map <silent> <leader>N :NERDTree<CR>
@@ -177,7 +178,7 @@ let g:lightline = {
       \   'gitbranch': 'FugitiveHead',
       \ },
       \ }
-colorscheme solarized
+" colorscheme solarized
 set cursorline
 " change current line color, should be put behind colorscheme
 hi CursorLine gui=underline cterm=underline term=underline
