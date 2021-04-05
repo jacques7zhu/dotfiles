@@ -112,6 +112,6 @@ function fish_prompt --description 'Write out the prompt'
   end
 
   #echo -s "$__fish_prompt_user" "$USER" @ "$__fish_prompt_host" "$__fish_prompt_hostname" "$__fish_prompt_normal" ' ' "$__fish_prompt_cwd" (prompt_pwd)
-  echo -s "$__fish_prompt_normal" ' ' "$__fish_prompt_cwd" (prompt_pwd)
+  echo -s "$USER" @ "$__fish_prompt_hostname" "$__fish_prompt_normal" ' ' "$__fish_prompt_cwd" (prompt_pwd)
   echo -s (__fish_git_prompt) "$__fish_prompt_normal" "$delim" ' '
 end
