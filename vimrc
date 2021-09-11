@@ -26,7 +26,6 @@ Plug 'tpope/vim-repeat' " optimize .
 Plug 'drmikehenry/vim-headerguard' "add header guard
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'vimwiki/vimwiki'
 Plug 'itchyny/lightline.vim'
 Plug 'justinmk/vim-sneak'
 " The bang version will try to download the prebuilt binary if cargo does not exist.
@@ -36,6 +35,7 @@ Plug 'mattn/emmet-vim'
 Plug 'ThePrimeagen/vim-be-good'
 Plug 'w0rp/ale'
 Plug 'elmcast/elm-vim'
+Plug 'skywind3000/asyncrun.vim'
 
 call plug#end()
 
@@ -91,17 +91,10 @@ nnoremap <Leader>r :so $MYVIMRC<cr> " reload vimrc of neovim
 " move selected
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
-nnoremap <silent> <leader>g  :Clap grep2<cr>
-nnoremap <silent> <leader>f :Clap files<cr>
-nnoremap <silent> <leader>G :Clap git_diff_files<cr>
-nnoremap <silent> <leader>m :Clap marks<cr>
-nnoremap <silent> <leader>j :Clap jumps<cr>
-nnoremap <silent> <leader>b :Clap buffers<cr>
-"nnoremap <silent> <leader>h :Clap history<cr>
-nnoremap <C-n> :call OpenTerm()<cr>i
-nnoremap <Leader>t :call OpenTerm()<cr>i
+nnoremap <silent> <C-n> :call OpenTerm()<cr>i
+nnoremap <silent> <Leader>t :call OpenTerm()<cr>i
 tnoremap <leader><Esc> <C-\><C-n> " map key to normal mode in vim terminal
-tnoremap <C-d> <C-\><C-n>:q<cr>" map key to normal mode in vim terminal
+tnoremap <leader><C-d> <C-\><C-n>:q<cr>" map key to normal mode in vim terminal
 
 function OpenTerm()
     let term_buff = bufname("^term://*$")
@@ -139,7 +132,7 @@ set spell spelllang=en_us
 set encoding=utf-8
 set number
 set relativenumber
-set colorcolumn=80
+set colorcolumn=88
 set clipboard=unnamed
 set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
 set mouse=n
@@ -185,13 +178,17 @@ let g:lightline = {
       \ 'active': {
       \   'left': [ ['gitbranch'], ['relativepath', 'modified'] ],
       \   'right': [ [ 'lineinfo' ],
-      \              [ 'percent' ] ]
+      \              [ 'percent' ],
+      \              [ 'async_status'] ]
       \ },
       \ 'inactive': {
       \   'left': [ ['relativepath', 'modified'] ],
       \ },
       \ 'component_function': {
       \   'gitbranch': 'FugitiveHead',
+      \ },
+      \ 'component': {
+      \   'async_status': '%{g:asyncrun_status}',
       \ },
       \ }
 colorscheme solarized
@@ -245,6 +242,8 @@ let g:ale_fixers = {
 \   'python': ['autopep8'],
 \   'javascript': ['eslint'],
 \}
+let g:ale_python_flake8_options = '--max-line-length 88'
+let g:ale_python_autopep8_options = '--max-line-length=88'
 
 " ignore files
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,**/venv/**,*.pyc,*.pyo,__pycache__
@@ -256,6 +255,7 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll|o|pyc)$',
   \}
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard'] " ignore files in .gitignore
+let g:ctrlp_cmd = 'CtrlPMRU' " most recently used, use CtrlPBuffer for buffer
 
 " Indent Python in the Google way.
 let s:maxoff = 50 " maximum number of lines to look backwards.
@@ -300,7 +300,7 @@ endfunction
 "autocmd VimEnter * if !argc() | NERDTree | endif
 
 " For coc.nvim
-" source ~/.vim/coc_config.vimrc
+source ~/.vim/coc_config.vimrc
 
 " For neovim
 if !has('nvim')
@@ -313,3 +313,32 @@ set updatetime=100
 " for elm
 let maplocalleader = " "
 
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" for asyncrun.vim
+let g:asyncrun_open = 0
+let g:asyncrun_disable = 0
+" :command! AsyncRunDisable let g:asyncrun_disable = 1
+fun! AsyncRunScp()
+    " if !g:asyncrun_disable
+    AsyncRun ~/.vim/async-scp.sh % cs1b ~/Documents/cs1b/gs-workspace /home/yuanjie/gs-workspace1
+    " endif
+endfun
+autocmd BufWritePost ~/Documents/cs1b/gs-workspace/* :call AsyncRunScp()
+" autocmd FileChangedShell ~/Documents/cs1b/gs-workspace/* :AsyncRun ~/.vim/async-scp.sh % cs1b ~/Documents/cs1b/gs-workspace /home/yuanjie/gs-workspace
+
+:command! SyncCs1b AsyncRun ~/.vim/async-scp.sh '' cs1b ~/Documents/cs1b/gs-workspace /home/yuanjie/gs-workspace1
+
+" https://xxstackoverflow.com/questions/1205286/renaming-the-current-file-in-vim
+command! -nargs=1 Rename saveas <args> | call delete(expand('#')) | bd #
+
+" for vim-clap
+nnoremap <silent> <leader>g  :Clap grep2<cr>
+nnoremap <silent> <leader>f :Clap files<cr>
+nnoremap <silent> <leader>d :Clap git_diff_files<cr>
+nnoremap <silent> <leader>m :Clap marks<cr>
+nnoremap <silent> <leader>j :Clap jumps<cr>
+nnoremap <silent> <leader>b :Clap buffers<cr>
+"nnoremap <silent> <leader>h :Clap history<cr>
+let g:clap_layout = { 'relative': 'editor' }
