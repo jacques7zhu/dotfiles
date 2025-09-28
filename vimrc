@@ -19,7 +19,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter' " show git diff in sign column
 Plug 'tpope/vim-abolish' " case preserving replace
-"Plug 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround' " change surroundings
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy file finder
 Plug 'tpope/vim-repeat' " optimize .
@@ -33,9 +33,10 @@ Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
 Plug 'pangloss/vim-javascript'
 Plug 'mattn/emmet-vim'
 Plug 'ThePrimeagen/vim-be-good'
-Plug 'w0rp/ale'
-Plug 'elmcast/elm-vim'
+"Plug 'w0rp/ale'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'petRUShka/vim-opencl'
+Plug 'rhysd/vim-clang-format'
 
 call plug#end()
 
@@ -61,7 +62,7 @@ nnoremap Y y$
 nnoremap <C-S> :w<CR>
 nnoremap X :x<CR> " save and close
 nnoremap <F4> oimport ipdb<CR>ipdb.set_trace()<CR><ESC> " map F4 to insert ipdb
-nnoremap <leader>f :ALEFix<CR>
+" nnoremap <leader>f :ALEFix<CR>
 inoremap <C-l> <ESC>la
 nmap <silent> cp :let @+ = expand("%")<cr> " copy relative path of current file"
 nmap <silent> <leader>p cw<C-r>0<ESC> " paste word from current cursor with content in register 0
@@ -131,8 +132,8 @@ set foldlevelstart=20
 set spell spelllang=en_us
 set encoding=utf-8
 set number
-set relativenumber
-set colorcolumn=88
+set norelativenumber
+set colorcolumn=100
 set clipboard=unnamed
 set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
 set mouse=n
@@ -158,7 +159,7 @@ au FileType python set cindent
 autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=GetGooglePythonIndent(v:lnum)
 autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=4 indentexpr=
 autocmd FileType c setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd FileType cpp setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType cpp setlocal tabstop=4 shiftwidth=4 expandtab
 autocmd FileType markdown setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd FileType verilog_systemverilog,systemverilog setlocal et sw=2 ts=2
@@ -233,17 +234,17 @@ let g:jedi#usages_command = "<leader>u"
 let g:jedi#show_call_signatures = "1"
 
 " for ale linter and fixing
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-\   'python': ['flake8'],
-\   'javascript': ['eslint'],
-\}
-let g:ale_fixers = {
-\   'python': ['autopep8'],
-\   'javascript': ['eslint'],
-\}
-let g:ale_python_flake8_options = '--max-line-length 88'
-let g:ale_python_autopep8_options = '--max-line-length=88'
+" let g:ale_linters_explicit = 1
+" let g:ale_linters = {
+" \   'python': ['flake8'],
+" \   'javascript': ['eslint'],
+" \}
+" let g:ale_fixers = {
+" \   'python': ['autopep8'],
+" \   'javascript': ['eslint'],
+" \}
+" let g:ale_python_flake8_options = '--max-line-length 88'
+" let g:ale_python_autopep8_options = '--max-line-length=88'
 
 " ignore files
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,**/venv/**,*.pyc,*.pyo,__pycache__
@@ -294,8 +295,13 @@ let g:pyindent_continue = 'shiftwidth() * 1'
 
 " Custom header guard
 function! g:HeaderguardName()
-  return "INC_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g')) . "_"
+  " return "INC_" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g')) . "_"
+  let relpath = expand('%:.')
+  let parts = split(relpath, '/')
+  let short = join(parts[-4:], '/')
+  return toupper(substitute(short, '[^0-9A-Za-z_]', '_', 'g')) . "__"
 endfunction
+
 
 "autocmd VimEnter * if !argc() | NERDTree | endif
 
@@ -309,9 +315,6 @@ endif
 
 " reduce vim delay
 set updatetime=100
-
-" for elm
-let maplocalleader = " "
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
@@ -334,7 +337,7 @@ autocmd BufWritePost ~/Documents/cs1b/gs-workspace/* :call AsyncRunScp()
 command! -nargs=1 Rename saveas <args> | call delete(expand('#')) | bd #
 
 " for vim-clap
-nnoremap <silent> <leader>g  :Clap grep2<cr>
+nnoremap <silent> <leader>g  :Clap grep<cr>
 nnoremap <silent> <leader>f :Clap files<cr>
 nnoremap <silent> <leader>d :Clap git_diff_files<cr>
 nnoremap <silent> <leader>m :Clap marks<cr>
@@ -342,3 +345,7 @@ nnoremap <silent> <leader>j :Clap jumps<cr>
 nnoremap <silent> <leader>b :Clap buffers<cr>
 "nnoremap <silent> <leader>h :Clap history<cr>
 let g:clap_layout = { 'relative': 'editor' }
+
+" for clang-format
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
