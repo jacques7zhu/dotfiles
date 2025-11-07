@@ -135,6 +135,7 @@ set number
 set norelativenumber
 set colorcolumn=100
 set clipboard=unnamed
+set clipboard+=unnamedplus
 set cino=l1,t0,g0,(0 " indent ( using =, cino controls the indentation
 set mouse=n
 "set mouse=a
