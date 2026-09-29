@@ -25,8 +25,8 @@
 [status]
 	submoduleSummary = true
 [user]
-  name = YuanjieZhuKolmostar
-  email = yuanjie.zhu@kolmostar.com
+  name = jacques7zhu
+  email = jacques7zhu@126.com
 [credential]
   helper = osxkeychain
   useHttpPath = true # associate login credentials specific to the repository path rather than the domain (which is its default behavior)
